@@ -1,0 +1,9 @@
+venv/*
+__pycache__
+**/__pycache__
+test.py
+local.env
+.idea
+.vscode
+solidmusic/*.session
+solidmusic/*.session-journal
