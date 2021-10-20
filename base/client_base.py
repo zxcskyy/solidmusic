@@ -1,6 +1,5 @@
 from pyrogram import Client
 from konfig import config
-from tgEasy import tgClient
 
 
 user = Client(
@@ -10,13 +9,10 @@ user = Client(
 )
 
 
-bots = Client(
+bot = Client(
     ":memory:",
     config.API_ID,
     config.API_HASH,
     bot_token=config.BOT_TOKEN,
-    plugins=dict(root="solidmusic.handlers")
+    plugins=dict(root="handlers")
 )
-
-
-bot = tgClient(bots)

@@ -5,5 +5,5 @@ test.py
 local.env
 .idea
 .vscode
-solidmusic/*.session
-solidmusic/*.session-journal
+*.session
+*.session-journal

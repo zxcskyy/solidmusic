@@ -2,7 +2,7 @@ import asyncio
 
 from pyrogram import types
 from pyrogram.errors import FloodWait
-from pytgcalls import PyTgCalls, StreamType
+from pytgcalls import StreamType
 from pytgcalls.exceptions import NoActiveGroupCall
 from pytgcalls.types.input_stream import AudioPiped
 from solidAPI import get_message
@@ -12,54 +12,42 @@ from .call_base import CallBase
 
 
 class MusicBase(CallBase):
-    async def _play(self, message: types.Message, source: str, y: types.Message, query=""):
-        chat_id = message.chat.id
+    async def _play(self, chat_id: int, title: str, uri: str):
         playlist = self.playlist
         call = self.call
-        playlist[chat_id] = [{"query": query}]
-        await y.edit(get_message(chat_id, "stream").format(query))
+        playlist[chat_id] = [{"title": title, "uri": uri}]
         await call.join_group_call(
             chat_id,
-            AudioPiped(source),
+            AudioPiped(uri),
             stream_type=StreamType().pulse_stream
         )
 
-    async def _set_play(self, message: types.Message, source: str, y: types.Message, query=""):
-        playlist = self.playlist
-        chat_id = message.chat.id
+    async def _set_play(self, chat_id: int, title: str, uri: str):
         try:
-            await self._play(message, source, y, query)
-            return
-        except FloodWait as e:
-            await message.reply(f"getting floodwait {e.x} second, bot sleeping")
-            await asyncio.sleep(e.x)
-            await self._play(message, source, y, query)
+            return await self._play(chat_id, title, uri)
         except NoActiveGroupCall:
-            try:
-                await self.create_call(chat_id)
-                await self._play(message, source, y, query)
-            except Exception as ex:
-                await y.edit(
-                    f"{type(ex).__name__}: {ex}"
-                )
-                del playlist[chat_id]
-        except Exception as ex:
-            await y.edit(f"{type(ex).__name__}: {ex}")
-            del playlist[chat_id]
+            await self.create_call(chat_id)
+            await self._play(chat_id, title, uri)
 
-    async def play(self, message: types.Message, query=""):
-        chat_id = message.chat.id
+    async def play(self, cb: types.CallbackQuery, result: dict[str, str]):
         playlist = self.playlist
+        chat_id = cb.message.chat.id
+        title = result["title"]
+        uri = result["uri"]
         if not playlist:
-            y = await message.reply(get_message(chat_id, "process"))
-            url = get_audio_link(query)
-            await self._set_play(message, url, y, query)
-            return
-        if len(playlist[chat_id]) >= 1:
-            playlist[chat_id].extend([{"query": query}])
-            y = await message.reply("queued")
+            y = await cb.edit_message_text(get_message(chat_id, "process"))
+            url = get_audio_link(uri)
+            try:
+                await self._set_play(chat_id, title, url)
+                await y.edit(f"playing {result['title']} in here")
+            except FloodWait as e:
+                await y.edit(f"getting floodwait, bot sleeping for {e.x} seconds")
+                await asyncio.sleep(e.x)
+                await self._set_play(chat_id, title, url)
+            except Exception as e:
+                await y.edit(f"an error occured\n\n{e}")
+        elif len(playlist[chat_id]) >= 1:
+            playlist[chat_id].extend([{"title": title, "uri": uri}])
+            y = await cb.edit_message_text("queued")
             await asyncio.sleep(5)
-            await y.delete()
-            return
-
-
+            return await y.delete()

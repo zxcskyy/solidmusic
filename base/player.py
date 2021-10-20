@@ -17,12 +17,10 @@ async def stream_ended(_, update):
     chat_id = update.chat_id
     if playlist:
         if not playlist[chat_id]:
-            del playlist[chat_id]
-            await call.leave_group_call(chat_id)
+            return await call.leave_group_call(chat_id)
         if len(playlist[chat_id]) > 1:
             playlist[chat_id].pop(0)
             query = playlist[chat_id][0]["query"]
-            await player.stream_change(chat_id, query)
-            return
+            return await player.stream_change(chat_id, query)
         return
     return

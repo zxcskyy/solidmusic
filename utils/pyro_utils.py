@@ -1,12 +1,12 @@
 from youtube_search import YoutubeSearch
 
-music_result = []
+music_result: dict[int, list] = {}
 
 
 def yt_search(query: str):
     result = []
-    i = j = 0
-    for _ in range(10):
+    j = 0
+    for i in range(10):
         i += 1
         yt_res = YoutubeSearch(query, 10).to_dict()
         x = {

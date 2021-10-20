@@ -2,13 +2,10 @@ from dotenv import load_dotenv
 from os import path, getenv
 
 
-def check_env():
-    if path.exists("local.env"):
-        return load_dotenv("local.env")
+if path.exists("local.env"):
+    load_dotenv("local.env")
+else:
     load_dotenv()
-
-
-check_env()
 
 
 class Config:
