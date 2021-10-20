@@ -1,14 +1,13 @@
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from solidAPI import set_lang
 
-from base.client_base import bot
 from utils.decorators import authorized_only
 from utils.functions import group_only
 from solidAPI.other import kode, lang_flags, get_message
-from pyrogram import filters
+from pyrogram import filters, Client
 
 
-@bot.on_message(filters.command("lang") & group_only)
+@Client.on_message(filters.command("lang") & group_only)
 @authorized_only
 async def change_lang(_, message: Message):
     try:

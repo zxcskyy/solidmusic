@@ -29,7 +29,7 @@ class MusicBase(CallBase):
             await self.create_call(chat_id)
             await self._play(chat_id, title, uri)
 
-    async def play(self, cb: types.CallbackQuery, result: dict[str, str]):
+    async def play(self, cb: types.CallbackQuery, result):
         playlist = self.playlist
         chat_id = cb.message.chat.id
         title = result["title"]

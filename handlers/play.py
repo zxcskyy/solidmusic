@@ -1,8 +1,6 @@
-from pyrogram import types, filters
+from pyrogram import types, filters, Client
 from solidAPI import emoji
 
-from base.client_base import bot
-from base.player import player
 from utils.functions import group_only
 from utils.pyro_utils import music_result, yt_search
 
@@ -18,7 +16,7 @@ def play_keyboard(user_id: int):
         j += 1
 
 
-@bot.on_message(filters.command("play") & group_only)
+@Client.on_message(filters.command("play") & group_only)
 async def play_(_, message: types.Message):
     query = " ".join(message.command[1:])
     user_id = message.from_user.id

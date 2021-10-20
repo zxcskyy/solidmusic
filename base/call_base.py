@@ -10,12 +10,9 @@ from .client_base import user
 
 
 class CallBase:
-    call: PyTgCalls
-    playlist: dict[int, list[dict[str, str]]]
-
     def __init__(self, pytgcalls: PyTgCalls):
         self.call = pytgcalls
-        self.playlist = {}
+        self.playlist: dict[int, list[dict[str, str]]] = {}
 
     @staticmethod
     async def create_call(chat_id: int):

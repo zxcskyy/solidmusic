@@ -1,6 +1,6 @@
 import asyncio
 
-from pyrogram import filters
+from pyrogram import filters, Client
 from pyrogram.types import ChatMemberUpdated, Message
 
 from base.client_base import user, bot
@@ -9,10 +9,10 @@ from solidAPI.chat import add_chat, del_chat
 from utils.functions import group_only
 
 
-@bot.on_chat_member_updated(filters=filters.group)
-async def on_bot_added(_, msg: ChatMemberUpdated):
+@Client.on_chat_member_updated(filters=filters.group)
+async def on_bot_added(client: Client, msg: ChatMemberUpdated):
     try:
-        bot_id = (await bot.get_me()).id
+        bot_id = (await client.get_me()).id
         chat_id = msg.chat.id
         members_id = msg.new_chat_member.user.id
         lang = msg.new_chat_member.invited_by.language_code
@@ -22,10 +22,10 @@ async def on_bot_added(_, msg: ChatMemberUpdated):
         pass
 
 
-@bot.on_message(filters=filters.left_chat_member)
-async def on_bot_kicked(_, msg: Message):
+@Client.on_message(filters=filters.left_chat_member)
+async def on_bot_kicked(client: Client, msg: Message):
     try:
-        bot_id = (await bot.get_me()).id
+        bot_id = (await client.get_me()).id
         chat_id = msg.chat.id
         members = msg.left_chat_member
         if members.id == bot_id:

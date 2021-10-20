@@ -3,9 +3,9 @@ from solidAPI import emoji
 
 from base.player import player
 from utils.pyro_utils import music_result
-from base.client_base import bot
 from solidAPI.chat import set_lang
 from solidAPI.other import get_message
+from pyrogram import Client
 
 
 def play_next_keyboard(user_id: int):
@@ -24,7 +24,7 @@ def play_back_keyboard(user_id: int):
         j += 1
 
 
-@bot.on_callback_query("close")
+@Client.on_callback_query(filters="close")
 async def close_button(_, cb: CallbackQuery):
     callback = cb.data.split("|")
     user_id = int(callback[1])
@@ -40,7 +40,7 @@ async def close_button(_, cb: CallbackQuery):
     return await message.delete()
 
 
-@bot.on_callback_query("set_lang_(.*)")
+@Client.on_callback_query(filters="set_lang_(.*)")
 async def change_language_(_, cb: CallbackQuery):
     lang = cb.matches[0].group(1)
     chat = cb.message.chat
@@ -51,7 +51,7 @@ async def change_language_(_, cb: CallbackQuery):
         await cb.edit_message_text(f"an error occured\n\n{e}")
 
 
-@bot.on_callback_query("play(.*)")
+@Client.on_callback_query(filters="play(.*)")
 async def play_music(_, cb: CallbackQuery):
     match = cb.matches[0].group(1)
     data = cb.data.split(" |")
@@ -85,7 +85,7 @@ async def play_music(_, cb: CallbackQuery):
         await player.play(cb, result)
 
 
-@bot.on_callback_query("next")
+@Client.on_callback_query(filters="next")
 async def next_music_(_, cb: CallbackQuery):
     user_id = int(cb.data.split("|")[1])
     chat_id = cb.message.chat.id
@@ -93,6 +93,8 @@ async def next_music_(_, cb: CallbackQuery):
     results = "\n"
     from_id = cb.from_user.id
     k = 5
+    if from_id != user_id:
+        return await cb.answer("you not allowed", show_alert=True)
     for i in music:
         k += 1
         results += f"|- {k}. [{i['title'][:35]}...]({i['url']})\n"
@@ -122,7 +124,7 @@ async def next_music_(_, cb: CallbackQuery):
     )
 
 
-@bot.callback("back")
+@Client.on_callback_query(filters="back")
 async def back_music_(_, cb: CallbackQuery):
     user_id = int(cb.data.split("|")[0])
     chat_id = cb.message.chat.id
