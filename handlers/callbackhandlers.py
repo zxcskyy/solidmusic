@@ -5,7 +5,7 @@ from base.player import player
 from utils.pyro_utils import music_result
 from solidAPI.chat import set_lang
 from solidAPI.other import get_message
-from pyrogram import Client
+from pyrogram import Client, filters
 
 
 def play_next_keyboard(user_id: int):
@@ -24,7 +24,7 @@ def play_back_keyboard(user_id: int):
         j += 1
 
 
-@Client.on_callback_query(filters="close")
+@Client.on_callback_query(filters.regex(pattern=r"close"))
 async def close_button(_, cb: CallbackQuery):
     callback = cb.data.split("|")
     user_id = int(callback[1])
@@ -40,7 +40,7 @@ async def close_button(_, cb: CallbackQuery):
     return await message.delete()
 
 
-@Client.on_callback_query(filters="set_lang_(.*)")
+@Client.on_callback_query(filters.regex(pattern=r"set_lang_(.*)"))
 async def change_language_(_, cb: CallbackQuery):
     lang = cb.matches[0].group(1)
     chat = cb.message.chat
@@ -51,7 +51,7 @@ async def change_language_(_, cb: CallbackQuery):
         await cb.edit_message_text(f"an error occured\n\n{e}")
 
 
-@Client.on_callback_query(filters="play(.*)")
+@Client.on_callback_query(filters.regex(pattern=r"play(.*)"))
 async def play_music(_, cb: CallbackQuery):
     match = cb.matches[0].group(1)
     data = cb.data.split(" |")
@@ -85,7 +85,7 @@ async def play_music(_, cb: CallbackQuery):
         await player.play(cb, result)
 
 
-@Client.on_callback_query(filters="next")
+@Client.on_callback_query(filters.regex(pattern=r"next"))
 async def next_music_(_, cb: CallbackQuery):
     user_id = int(cb.data.split("|")[1])
     chat_id = cb.message.chat.id
@@ -124,7 +124,7 @@ async def next_music_(_, cb: CallbackQuery):
     )
 
 
-@Client.on_callback_query(filters="back")
+@Client.on_callback_query(filters.regex(pattern=r"back"))
 async def back_music_(_, cb: CallbackQuery):
     user_id = int(cb.data.split("|")[0])
     chat_id = cb.message.chat.id

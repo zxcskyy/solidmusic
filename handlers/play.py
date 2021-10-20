@@ -23,6 +23,7 @@ async def play_(_, message: types.Message):
     yts = yt_search(query)
     cache = []
     chat_id = message.chat.id
+    music_result[chat_id] = []
     for count, j in enumerate(yts, start=1):
         cache.append(j)
         if count % 5 == 0:

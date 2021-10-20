@@ -1,6 +1,6 @@
 from youtube_search import YoutubeSearch
 
-music_result: dict[int, list] = {}
+music_result = {}
 
 
 def yt_search(query: str):
