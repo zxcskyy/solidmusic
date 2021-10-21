@@ -34,7 +34,7 @@ def get_yt_details(link: str):
         "dislikes": format_count(pufy.dislikes),
         "rating": round(pufy.rating, 2),
         "channel": pufy.author,
-        "link": link
+        "link": f"https://youtube.com/watch?v={link}"
     }
 
 
