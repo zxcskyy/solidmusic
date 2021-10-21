@@ -106,7 +106,8 @@ async def next_music_(client: Client, cb: CallbackQuery):
         k += 1
         results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
         results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
-        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']})\n\n"
+        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']})\n"
+        results += "┗ powered by solid project\n\n"
 
     temp = []
     keyboard = []
@@ -119,7 +120,7 @@ async def next_music_(client: Client, cb: CallbackQuery):
         if count == len(in_keyboard):
             keyboard.append(temp)
     await cb.edit_message_text(
-        f"results\n{results}\n", reply_markup=InlineKeyboardMarkup(
+        f"{results}", reply_markup=InlineKeyboardMarkup(
             [
                 keyboard[0],
                 keyboard[1],
@@ -146,6 +147,7 @@ async def back_music_(client: Client, cb: CallbackQuery):
         res += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
         res += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
         res += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']})\n\n"
+        res += "┗ powered by solid project"
 
     temp = []
     keyboard = []
@@ -158,7 +160,7 @@ async def back_music_(client: Client, cb: CallbackQuery):
         if count == len(inline_board):
             keyboard.append(temp)
     await cb.edit_message_text(
-        f"results\n{res}\n", reply_markup=InlineKeyboardMarkup(
+        f"{res}", reply_markup=InlineKeyboardMarkup(
             [
                 keyboard[0],
                 keyboard[1],
@@ -167,5 +169,6 @@ async def back_music_(client: Client, cb: CallbackQuery):
                     InlineKeyboardButton(f"close {emoji.WASTEBASKET}", f"close|{user_id}")
                 ]
             ]
-        )
+        ),
+        disable_web_page_preview=True
     )

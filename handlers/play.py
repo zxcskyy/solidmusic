@@ -1,7 +1,6 @@
 from pyrogram import types, filters, Client
 from solidAPI import emoji
 
-from base.player import player
 from utils.functions import group_only
 from utils.pyro_utils import music_result, yt_search
 
@@ -41,6 +40,7 @@ async def play_(client: Client, message: types.Message):
         results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
         results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
         results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']})\n\n"
+        results += "┗ powered by solid project"
 
     temps = []
     keyboards = []
@@ -53,7 +53,7 @@ async def play_(client: Client, message: types.Message):
         if count == len(in_board):
             keyboards.append(temps)
     await message.reply(
-        f"{results}\n┗ powered by solid project.", reply_markup=types.InlineKeyboardMarkup(
+        f"{results}", reply_markup=types.InlineKeyboardMarkup(
             [
                 keyboards[0],
                 keyboards[1],
