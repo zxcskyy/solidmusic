@@ -39,8 +39,8 @@ async def play_(client: Client, message: types.Message):
     for i in music_result[chat_id][0]:
         k += 1
         results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
-        results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n\n"
-        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']}"
+        results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
+        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']})\n\n"
 
     temps = []
     keyboards = []
