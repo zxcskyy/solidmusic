@@ -13,7 +13,7 @@ def yt_search(query: str):
             "title": yt_res[j]["title"],
             "url": f"https://youtube.com{yt_res[j]['url_suffix']}",
             "duration": yt_res[j]["duration"],
-            "suffix": f"{yt_res[j]['url_suffix']}"
+            "id": f"{yt_res[j]['id']}"
         }
         result.append(x.copy())
         j += 1

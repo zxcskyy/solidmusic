@@ -39,7 +39,7 @@ async def play_(client: Client, message: types.Message):
         k += 1
         results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
         results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
-        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['suffix']})\n"
+        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['id']})\n"
         results += "┗ powered by solid project\n\n"
 
     temps = []
