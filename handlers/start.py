@@ -65,7 +65,7 @@ async def start_(client: Client, message: types.Message):
                 result_text = (
                     f"**track information**\n\n"
                     f"{emoji.LABEL} **title**: {details['title']}\n"
-                    f"{emoji.MEGAPHONE} **channel**: {details['channel']}"
+                    f"{emoji.MEGAPHONE} **channel**: {details['channel']}\n"
                     f"{emoji.STOPWATCH} **duration**: {details['duration']}\n"
                     f"{emoji.THUMBS_UP} **likes**: {details['likes']}\n"
                     f"{emoji.THUMBS_DOWN} **dislikes**: {details['dislikes']}\n"
