@@ -9,8 +9,11 @@ def authorized_only(func: Callable) -> Callable:
         user_id = message.from_user.id
         person = await message.chat.get_member(user_id)
         try:
-            if user_id in get_sudos(message.chat.id):
-                return await func(client, message)
+            try:
+                if user_id in get_sudos(message.chat.id):
+                    return await func(client, message)
+            except TypeError:
+                pass
             if person.status in ["creator", "administrator"]:
                 return await func(client, message)
         except AttributeError:

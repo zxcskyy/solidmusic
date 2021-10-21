@@ -1,4 +1,4 @@
-solidAPI==0.1.6
+solidAPI==0.1.8
 pafy==0.5.5
 python-dotenv==0.19.1
 youtube-dl==2021.6.6

@@ -3,7 +3,7 @@ import asyncio
 from pyrogram import filters, Client
 from pyrogram.types import ChatMemberUpdated, Message
 
-from base.client_base import user, bot
+from base.client_base import user
 from solidAPI.chat import add_chat, del_chat
 
 from utils.functions import group_only
@@ -38,22 +38,23 @@ async def on_bot_kicked(client: Client, msg: Message):
         await msg.reply(f"{e}")
 
 
-@bot.on_message(filters.command("addchat") & group_only)
+@Client.on_message(filters.command("addchat") & group_only)
 async def add_chat_(_, message: Message):
     try:
         chat_id = message.chat.id
         lang = (await message.chat.get_member(message.from_user.id)).user.language_code
-        add_chat(chat_id, lang)
-        await message.reply(f"{chat_id} added to our database")
+        x = add_chat(chat_id, lang)
+        if x == 201:
+            await message.reply(f"{chat_id} added to our database")
     except Exception as e:
         await message.reply(f"{e}")
 
 
-@bot.on_message(filters.command("delchat") & group_only)
+@Client.on_message(filters.command("delchat") & group_only)
 async def del_chat_(_, message: Message):
     try:
         chat_id = int("".join(message.command[1]))
-    except (KeyError, AttributeError):
+    except (KeyError, IndexError):
         chat_id = message.chat.id
     try:
         del_chat(chat_id)
