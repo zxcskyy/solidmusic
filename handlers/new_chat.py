@@ -43,9 +43,6 @@ async def add_chat_(_, message: Message):
     try:
         chat_id = message.chat.id
         lang = ""
-        for members in message.chat.iter_members(1):
-            lang += members.user.language_code
-            return
         add_chat(chat_id, lang)
         await message.reply(f"{chat_id} added to our database")
     except Exception as e:

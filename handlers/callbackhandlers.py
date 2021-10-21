@@ -32,7 +32,7 @@ async def close_button(_, cb: CallbackQuery):
     from_user_id = cb.from_user.id
     chat_id = message.chat.id
     person = await message.chat.get_member(from_user_id)
-    if from_user_id is not user_id:
+    if from_user_id != user_id:
         return await cb.answer("this is not for you.", show_alert=True)
     music_result[chat_id].clear()
     if person.status in ["creator", "administrator"]:
@@ -54,12 +54,12 @@ async def change_language_(_, cb: CallbackQuery):
 @Client.on_callback_query(filters.regex(pattern=r"play(.*)"))
 async def play_music(_, cb: CallbackQuery):
     match = cb.matches[0].group(1)
-    data = cb.data.split(" |")
+    data = cb.data.split("|")
     user_id = int(data[1])
     index = int(data[0].split(" ")[1])
     chat_id = cb.message.chat.id
     from_id = cb.from_user.id
-    if from_id is not user_id:
+    if from_id != user_id:
         return await cb.answer("this is not for u", show_alert=True)
 
     if not match:
@@ -98,7 +98,7 @@ async def next_music_(_, cb: CallbackQuery):
     for i in music:
         k += 1
         results += f"|- {k}. [{i['title'][:35]}...]({i['url']})\n"
-        results += f" - duration: {i['duraiton']}\n\n"
+        results += f" - duration: {i['duration']}\n\n"
     temp = []
     keyboard = []
     in_keyboard = list(play_next_keyboard(user_id))
@@ -126,7 +126,7 @@ async def next_music_(_, cb: CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"back"))
 async def back_music_(_, cb: CallbackQuery):
-    user_id = int(cb.data.split("|")[0])
+    user_id = int(cb.data.split("|")[1])
     chat_id = cb.message.chat.id
     music = music_result[chat_id][0]
     k = 0
