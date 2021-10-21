@@ -1,6 +1,7 @@
 from pyrogram import types, filters, Client
 from solidAPI import emoji
 
+from base.player import player
 from utils.functions import group_only
 from utils.pyro_utils import music_result, yt_search
 
@@ -17,7 +18,8 @@ def play_keyboard(user_id: int):
 
 
 @Client.on_message(filters.command("play") & group_only)
-async def play_(_, message: types.Message):
+async def play_(client: Client, message: types.Message):
+    bot_username = (await client.get_me()).username
     query = " ".join(message.command[1:])
     user_id = message.from_user.id
     yts = yt_search(query)
@@ -36,8 +38,10 @@ async def play_(_, message: types.Message):
     k = 0
     for i in music_result[chat_id][0]:
         k += 1
-        results += f"|- {k}. [{i['title'][:35]}...]({i['url']})\n"
-        results += f" - duration - {i['duration']}\n\n"
+        results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
+        results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n\n"
+        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']}"
+
     temps = []
     keyboards = []
     in_board = list(play_keyboard(user_id))
@@ -49,7 +53,7 @@ async def play_(_, message: types.Message):
         if count == len(in_board):
             keyboards.append(temps)
     await message.reply(
-        f"results\n{results}\n", reply_markup=types.InlineKeyboardMarkup(
+        f"{results}\n┗ powered by solid project.", reply_markup=types.InlineKeyboardMarkup(
             [
                 keyboards[0],
                 keyboards[1],

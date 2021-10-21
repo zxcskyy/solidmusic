@@ -40,6 +40,11 @@ async def close_button(_, cb: CallbackQuery):
     return await message.delete()
 
 
+@Client.on_callback_query(filters.regex(pattern=r"close2"))
+async def close_private_button(_, cb: CallbackQuery):
+    return await cb.message.delete()
+
+
 @Client.on_callback_query(filters.regex(pattern=r"set_lang_(.*)"))
 async def change_language_(_, cb: CallbackQuery):
     lang = cb.matches[0].group(1)
@@ -86,7 +91,8 @@ async def play_music(_, cb: CallbackQuery):
 
 
 @Client.on_callback_query(filters.regex(pattern=r"next"))
-async def next_music_(_, cb: CallbackQuery):
+async def next_music_(client: Client, cb: CallbackQuery):
+    bot_username = (await client.get_me()).username
     user_id = int(cb.data.split("|")[1])
     chat_id = cb.message.chat.id
     music = music_result[chat_id][1]
@@ -95,10 +101,13 @@ async def next_music_(_, cb: CallbackQuery):
     k = 5
     if from_id != user_id:
         return await cb.answer("you not allowed", show_alert=True)
+
     for i in music:
         k += 1
-        results += f"|- {k}. [{i['title'][:35]}...]({i['url']})\n"
-        results += f" - duration: {i['duration']}\n\n"
+        results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
+        results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
+        results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']}\n\n"
+
     temp = []
     keyboard = []
     in_keyboard = list(play_next_keyboard(user_id))
@@ -125,7 +134,8 @@ async def next_music_(_, cb: CallbackQuery):
 
 
 @Client.on_callback_query(filters.regex(pattern=r"back"))
-async def back_music_(_, cb: CallbackQuery):
+async def back_music_(client: Client, cb: CallbackQuery):
+    bot_username = (await client.get_me()).username
     user_id = int(cb.data.split("|")[1])
     chat_id = cb.message.chat.id
     music = music_result[chat_id][0]
@@ -133,8 +143,10 @@ async def back_music_(_, cb: CallbackQuery):
     res = "\n"
     for i in music:
         k += 1
-        res += f"|- {k}. [{i['title'][:35]}...]({i['url']})\n"
-        res += f" - duration - {i['duration']}\n\n"
+        res += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
+        res += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
+        res += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['url']}\n\n"
+
     temp = []
     keyboard = []
     inline_board = list(play_back_keyboard(user_id))
