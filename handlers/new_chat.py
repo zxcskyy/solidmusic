@@ -42,7 +42,7 @@ async def on_bot_kicked(client: Client, msg: Message):
 async def add_chat_(_, message: Message):
     try:
         chat_id = message.chat.id
-        lang = ""
+        lang = (await message.chat.get_member(message.from_user.id)).user.language_code
         add_chat(chat_id, lang)
         await message.reply(f"{chat_id} added to our database")
     except Exception as e:
