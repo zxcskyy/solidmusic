@@ -32,7 +32,7 @@ async def start_(client: Client, message: types.Message):
                         [
                             button_keyboard(
                                 f"{emoji.PLUS} add me to your chats",
-                                callback_data=f"https://t.me/solidmusicsbot?startgroup=true")
+                                url=f"https://t.me/solidmusicsbot?startgroup=true")
                         ],
                         [
                             button_keyboard(
@@ -58,7 +58,7 @@ async def start_(client: Client, message: types.Message):
         elif len(message.command) == 2:
             query = message.command[1]
             if query.startswith("ytinfo_"):
-                yt_link = "".join(query.split("_")[1:])
+                yt_link = query.split("ytinfo_")[1]
                 details = get_yt_details(yt_link)
                 thumb_url = details["thumbnails"]
                 thumb_file = download_yt_thumbnails(thumb_url, user_id)
@@ -83,7 +83,7 @@ async def start_(client: Client, message: types.Message):
                             [
                                 button_keyboard(
                                     f"{emoji.WASTEBASKET} close",
-                                    callback_data=f"close2"
+                                    callback_data=f"cls"
                                 )
                             ]
                         ]

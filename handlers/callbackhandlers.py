@@ -40,7 +40,7 @@ async def close_button(_, cb: CallbackQuery):
     return await message.delete()
 
 
-@Client.on_callback_query(filters.regex(pattern=r"close2"))
+@Client.on_callback_query(filters.regex(pattern=r"cls"))
 async def close_private_button(_, cb: CallbackQuery):
     return await cb.message.delete()
 
