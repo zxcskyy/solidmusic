@@ -17,16 +17,7 @@ def format_count(number: int):
     return f"{str(num).rstrip('0').rstrip('.')}{['', 'K', 'M', 'B', 'T'][magnitude]}"
 
 
-def get_yt_link(query: str):
-    return f"https://youtube.com{YoutubeSearch(query, 1).to_dict()[0]['url_suffix']}"
-
-
-def get_audio_link(query: str) -> str:
-    match = re.match(r"^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))", query)
-    if match:
-        url = query
-    else:
-        url = get_yt_link(query)
+def get_audio_link(url: str) -> str:
     pufy = pafy.new(url)
     audios = pufy.getbestaudio()
     return audios.url
