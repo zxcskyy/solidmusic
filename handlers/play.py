@@ -1,6 +1,7 @@
 from pyrogram import types, filters, Client
 from solidAPI import emoji
 
+from base.player import player
 from utils.functions import group_only
 from utils.pyro_utils import music_result, yt_search
 
@@ -65,3 +66,20 @@ async def play_(client: Client, message: types.Message):
         ),
         disable_web_page_preview=True
     )
+
+
+@player.call.on_stream_end()
+async def stream_ended(_, update):
+    playlist = player.playlist
+    call = player.call
+    chat_id = update.chat_id
+    if playlist:
+        if not playlist[chat_id]:
+            return await call.leave_group_call(chat_id)
+        if len(playlist[chat_id]) > 1:
+            playlist[chat_id].pop(0)
+            query = playlist[chat_id][0]["uri"]
+            return await player.stream_change(chat_id, query)
+        return
+    if not playlist:
+        return await call.leave_group_call(chat_id)
