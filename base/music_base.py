@@ -5,9 +5,10 @@ from pyrogram.errors import FloodWait
 from pytgcalls import StreamType
 from pytgcalls.exceptions import NoActiveGroupCall
 from pytgcalls.types.input_stream import AudioPiped
-from solidAPI import get_message, add_chat
+from solidAPI import add_chat, get_message
 
 from utils.functions import get_audio_link
+
 from .call_base import CallBase
 
 
@@ -17,9 +18,7 @@ class MusicBase(CallBase):
         call = self.call
         playlist[chat_id] = [{"title": title, "uri": uri}]
         await call.join_group_call(
-            chat_id,
-            AudioPiped(uri),
-            stream_type=StreamType().pulse_stream
+            chat_id, AudioPiped(uri), stream_type=StreamType().pulse_stream
         )
 
     async def _set_play(self, chat_id: int, title: str, uri: str):
