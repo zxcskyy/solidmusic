@@ -50,9 +50,10 @@ class CallBase:
             return "not playlist"
         if len(playlist[chat_id]) > 1:
             playlist[chat_id].pop(0)
-            query = playlist[chat_id][0]["query"]
+            query = playlist[chat_id][0]["uri"]
+            title = playlist[chat_id][0]["title"]
             await self.stream_change(chat_id, query)
-            return f"skipped track, and playing {query}"
+            return f"skipped track, and playing {title}"
 
     async def end_stream(self, chat_id):
         playlist = self.playlist

@@ -45,7 +45,9 @@ async def add_chat_(_, message: Message):
         lang = (await message.chat.get_member(message.from_user.id)).user.language_code
         x = add_chat(chat_id, lang)
         if x == 201:
-            await message.reply(f"{chat_id} added to our database")
+            return await message.reply(f"{chat_id} added to our database")
+        if x == 409:
+            return await message.reply("this chat already added to our database.")
     except Exception as e:
         await message.reply(f"{e}")
 
@@ -57,7 +59,10 @@ async def del_chat_(_, message: Message):
     except (KeyError, IndexError):
         chat_id = message.chat.id
     try:
-        del_chat(chat_id)
-        await message.reply("chat deleted from db")
+        x = del_chat(chat_id)
+        if x == 200:
+            return await message.reply("chat deleted from db")
+        if x == 404:
+            return await message.reply(f"{chat_id} already deleted from our database.")
     except Exception as e:
         await message.reply(f"{e}")

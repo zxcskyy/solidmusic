@@ -5,7 +5,7 @@ from pyrogram.errors import FloodWait
 from pytgcalls import StreamType
 from pytgcalls.exceptions import NoActiveGroupCall
 from pytgcalls.types.input_stream import AudioPiped
-from solidAPI import get_message
+from solidAPI import get_message, add_chat
 
 from utils.functions import get_audio_link
 from .call_base import CallBase
@@ -34,16 +34,23 @@ class MusicBase(CallBase):
         chat_id = cb.message.chat.id
         title = result["title"]
         uri = result["uri"]
+        user_id = cb.message.from_user.id
+        lang = (await cb.message.chat.get_member(user_id)).user.language_code
         if not playlist:
-            y = await cb.edit_message_text(get_message(chat_id, "process"))
+            try:
+                y = await cb.edit_message_text(get_message(chat_id, "process"))
+            except KeyError:
+                add_chat(chat_id, lang)
+                y = await cb.edit_message_text(get_message(chat_id, "process"))
             url = get_audio_link(uri)
             try:
                 await self._set_play(chat_id, title, url)
-                await y.edit(f"playing {result['title']} in here")
+                await y.edit(f"playing {title} in here")
             except FloodWait as e:
                 await y.edit(f"getting floodwait, bot sleeping for {e.x} seconds")
                 await asyncio.sleep(e.x)
                 await self._set_play(chat_id, title, url)
+                await y.edit(f"playing {title} in heer")
             except Exception as e:
                 await y.edit(f"an error occured\n\n{e}")
         elif len(playlist[chat_id]) >= 1:
