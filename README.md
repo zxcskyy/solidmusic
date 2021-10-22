@@ -18,7 +18,8 @@ and <a href="https://github.com/pyrogram/pyrogram">Pyrogram</a>
 <hr />
 
 <h3>Deploy to Heroku </h3>
-<h5>Coming soon. </h5>
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/DoellBarr/solidmusic)
 
 <h2> Conclusion </h2>
 <ul>
