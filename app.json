@@ -1,0 +1,33 @@
+{
+  "name": "Telegram Streamer Bot",
+  "description": "Open-Source bot to play songs in your Telegram's Group Voice Chat. Powered by PyTgCalls.",
+  "keywords": ["musicbot", "voicechat", "telegram"],
+  "repository": "https://github.com/DoellBarr/solidmusic",
+  "stack": "container",
+  "env": {
+    "API_ID": {
+      "description": "API_ID of your Telegram Account my.telegram.org/apps",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "API_HASH of your Telegram Account my.telegram.org/apps",
+      "required": true
+    },
+    "SESSION": {
+      "description": "A Pyrogram session string",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "A bot token from @BotFather",
+      "required": true
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    }
+  ]
+}
