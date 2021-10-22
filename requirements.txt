@@ -5,4 +5,5 @@ youtube-dl==2021.6.6
 youtube-search==2.1.0
 git+https://github.com/pyrogram/pyrogram@master
 py-tgcalls==0.8.1rc1
+tgcrypto==1.2.2
 aiohttp[speedups]
