@@ -1,11 +1,11 @@
+from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from solidAPI import emoji
+from solidAPI.chat import add_chat, set_lang
+from solidAPI.other import get_message
 
 from base.player import player
 from utils.pyro_utils import music_result
-from solidAPI.chat import set_lang, add_chat
-from solidAPI.other import get_message
-from pyrogram import Client, filters
 
 
 def play_next_keyboard(user_id: int):
@@ -36,15 +36,7 @@ def res_music(k, music, bot_username):
 
 
 async def edit_inline_text(
-        inline_board,
-        temp,
-        keyboard,
-        cb,
-        user_id,
-        stats,
-        k,
-        music,
-        bot_username
+    inline_board, temp, keyboard, cb, user_id, stats, k, music, bot_username
 ):
     results = res_music(k, music, bot_username)
     for count, j in enumerate(inline_board, start=1):
@@ -55,19 +47,24 @@ async def edit_inline_text(
         if count == len(inline_board):
             keyboard.append(temp)
     await cb.edit_message_text(
-        f"{results}", reply_markup=InlineKeyboardMarkup(
+        f"{results}",
+        reply_markup=InlineKeyboardMarkup(
             [
                 keyboard[0],
                 keyboard[1],
                 [
-                    InlineKeyboardButton(f"next {emoji.RIGHT_ARROW}", f"next|{user_id}") if
-                    stats == "next" else
-                    InlineKeyboardButton(f"back {emoji.LEFT_ARROW}", callback_data=f"back|{user_id}"),
-                    InlineKeyboardButton(f"close {emoji.WASTEBASKET}", f"close|{user_id}")
-                ]
+                    InlineKeyboardButton(f"next {emoji.RIGHT_ARROW}", f"next|{user_id}")
+                    if stats == "next"
+                    else InlineKeyboardButton(
+                        f"back {emoji.LEFT_ARROW}", callback_data=f"back|{user_id}"
+                    ),
+                    InlineKeyboardButton(
+                        f"close {emoji.WASTEBASKET}", f"close|{user_id}"
+                    ),
+                ],
             ]
         ),
-        disable_web_page_preview=True
+        disable_web_page_preview=True,
     )
 
 
@@ -118,10 +115,7 @@ async def play_music(_, cb: CallbackQuery):
         music = music_result[chat_id][0]
         title: str = music[index]["title"]
         uri: str = music[index]["url"]
-        result = {
-            "title": title,
-            "uri": uri
-        }
+        result = {"title": title, "uri": uri}
 
         music_result[chat_id].clear()
         await player.play(cb, result)
@@ -129,10 +123,7 @@ async def play_music(_, cb: CallbackQuery):
         music = music_result[chat_id][1]
         title: str = music[index]["title"]
         uri: str = music[index]["url"]
-        result = {
-            "title": title,
-            "uri": uri
-        }
+        result = {"title": title, "uri": uri}
         music_result[chat_id].clear()
         await player.play(cb, result)
 
@@ -151,7 +142,9 @@ async def next_music_(client: Client, cb: CallbackQuery):
     temp = []
     keyboard = []
     inline_board = list(play_next_keyboard(user_id))
-    await edit_inline_text(inline_board, temp, keyboard, cb, user_id, "back", k, music, bot_username)
+    await edit_inline_text(
+        inline_board, temp, keyboard, cb, user_id, "back", k, music, bot_username
+    )
 
 
 @Client.on_callback_query(filters.regex(pattern=r"back"))
@@ -164,4 +157,6 @@ async def back_music_(client: Client, cb: CallbackQuery):
     temp = []
     keyboard = []
     inline_board = list(play_back_keyboard(user_id))
-    await edit_inline_text(inline_board, temp, keyboard, cb, user_id, "next", k, music, bot_username)
+    await edit_inline_text(
+        inline_board, temp, keyboard, cb, user_id, "next", k, music, bot_username
+    )
