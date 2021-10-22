@@ -20,7 +20,6 @@ class CallBase(object):
             playlist = self.playlist
             call = self.call
             chat_id = update.chat_id
-            await user.send_message(chat_id, update)
             if len(playlist[chat_id]) > 1:
                 playlist[chat_id].pop(0)
                 query = playlist[chat_id][0]["uri"]
