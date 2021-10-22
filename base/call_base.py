@@ -1,25 +1,42 @@
 import random
 
 from pyrogram.raw.functions.phone import CreateGroupCall
-from pytgcalls import PyTgCalls
 from pytgcalls.exceptions import GroupCallNotFound
+from pytgcalls.types import Update
 from pytgcalls.types.input_stream import AudioPiped
 
 from utils.functions import get_audio_link
-from .client_base import user
+
+from .client_base import call_py, user
 
 
-class CallBase:
-    def __init__(self, pytgcalls: PyTgCalls):
-        self.call = pytgcalls
+class CallBase(object):
+    def __init__(self):
+        self.call = call_py
         self.playlist: dict[int, list[dict[str, str]]] = {}
+
+        @self.call.on_stream_end()
+        async def stream_ended(_, update: Update):
+            playlist = self.playlist
+            call = self.call
+            chat_id = update.chat_id
+            await user.send_message(chat_id, update)
+            if len(playlist[chat_id]) > 1:
+                playlist[chat_id].pop(0)
+                query = playlist[chat_id][0]["uri"]
+                await self.stream_change(chat_id, query)
+            else:
+                await call.leave_group_call(chat_id)
+                del playlist[chat_id]
 
     @staticmethod
     async def create_call(chat_id: int):
-        await user.send(CreateGroupCall(
-            peer=await user.resolve_peer(chat_id),
-            random_id=random.randint(10000, 999999999)
-        ))
+        await user.send(
+            CreateGroupCall(
+                peer=await user.resolve_peer(chat_id),
+                random_id=random.randint(10000, 999999999),
+            )
+        )
 
     async def change_status(self, status: str, chat_id: int):
         if status == "pause":
@@ -39,10 +56,7 @@ class CallBase:
     async def stream_change(self, chat_id: int, query: str):
         call = self.call
         url = get_audio_link(query)
-        await call.change_stream(
-            chat_id,
-            AudioPiped(url)
-        )
+        await call.change_stream(chat_id, AudioPiped(url))
 
     async def change_stream(self, chat_id):
         playlist = self.playlist
