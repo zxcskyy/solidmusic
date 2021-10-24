@@ -17,7 +17,7 @@ async def on_bot_added(client: Client, msg: ChatMemberUpdated):
         members_id = msg.new_chat_member.user.id
         lang = msg.new_chat_member.invited_by.language_code
         if members_id == bot_id:
-            add_chat(chat_id, lang) if lang else "en"
+            add_chat(chat_id, lang if lang else "en")
     except AttributeError:
         pass
 
