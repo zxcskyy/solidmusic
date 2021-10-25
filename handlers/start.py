@@ -1,6 +1,7 @@
 from pyrogram import Client, filters, types
 from solidAPI import emoji
 
+from base.client_base import bot
 from utils.functions import get_yt_details, download_yt_thumbnails
 
 markup_keyboard = types.InlineKeyboardMarkup
@@ -9,6 +10,7 @@ button_keyboard = types.InlineKeyboardButton
 
 @Client.on_message(filters.command("start"))
 async def start_(_, message: types.Message):
+    bot_username = (await bot.get_me()).username
     user_id = message.from_user.id
     if message.chat.type == "supergroup":
         return await message.reply(
@@ -19,19 +21,19 @@ async def start_(_, message: types.Message):
         if len(message.command) == 1:
             await message.reply(
                 f"hi {message.from_user.mention}! i can play musics on your groups through"
-                f"telegram voice chats\n"
+                "telegram voice chats\n"
                 f"{emoji.LIGHT_BULB} find out all my command by clicking \"commands\" button",
                 reply_markup=markup_keyboard(
                     [
                         [
                             button_keyboard(
                                 f"{emoji.PLUS} add me to your chats",
-                                url=f"https://t.me/solidmusicsbot?startgroup=true")
+                                url=f"https://t.me/{bot_username}?startgroup=true")
                         ],
                         [
                             button_keyboard(
                                 f"{emoji.NOTEBOOK} commands",
-                                callback_data=f"help_commands"
+                                callback_data="help_commands"
                             )
                         ],
                         [
@@ -77,7 +79,7 @@ async def start_(_, message: types.Message):
                             [
                                 button_keyboard(
                                     f"{emoji.WASTEBASKET} close",
-                                    callback_data=f"cls"
+                                    callback_data="cls"
                                 )
                             ]
                         ]

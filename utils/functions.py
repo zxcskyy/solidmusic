@@ -1,9 +1,6 @@
-import re
-
 import requests
 from pyrogram import filters
 import pafy
-from youtube_search import YoutubeSearch
 
 group_only = filters.group & ~filters.private & ~filters.edited & ~filters.forwarded & ~filters.via_bot
 

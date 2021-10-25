@@ -31,7 +31,7 @@ async def change_lang(_, message: Message):
             if count == len(kode):
                 keyboard.append(temp)
         await message.reply(
-            f"this is all language that supported with this bot",
+            "this is all language that supported with this bot",
             reply_markup=InlineKeyboardMarkup(keyboard),
         )
     if len(lang) == 2:
