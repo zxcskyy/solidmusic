@@ -71,7 +71,7 @@ class CallBase(object):
             title = playlist[chat_id][0]["title"]
             await self.stream_change(chat_id, query)
             return f"skipped track, and playing {title}"
-        elif not playlist[chat_id]:
+        if not playlist:
             return "not playlist"
 
     async def end_stream(self, chat_id):
@@ -89,5 +89,3 @@ class CallBase(object):
         playlist = self.playlist
         call = self.call
         current = playlist[chat_id][0]
-
-
