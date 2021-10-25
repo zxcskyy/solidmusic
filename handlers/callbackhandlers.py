@@ -90,7 +90,7 @@ async def get_infos(client, cb, k):
     chat_id = cb.message.chat.id
     user_id = int(cb.data.split("|")[1])
     music = music_result[chat_id][k]
-    return bot_username, chat_id, user_id, music
+    return bot_username, user_id, music
 
 
 @Client.on_callback_query(filters.regex(pattern=r"close"))
@@ -146,7 +146,7 @@ async def play_music_(_, cb: CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"next"))
 async def next_music_(client: Client, cb: CallbackQuery):
-    bot_username, chat_id, user_id, music = await get_infos(client, cb, 1)
+    bot_username, user_id, music = await get_infos(client, cb, 1)
     from_id = cb.from_user.id
     if from_id != user_id:
         return await cb.answer("you not allowed", show_alert=True)
@@ -162,7 +162,7 @@ async def next_music_(client: Client, cb: CallbackQuery):
 
 @Client.on_callback_query(filters.regex(pattern=r"back"))
 async def back_music_(client: Client, cb: CallbackQuery):
-    bot_username, chat_id, user_id, music = await get_infos(client, cb, 0)
+    bot_username, user_id, music = await get_infos(client, cb, 0)
     k = 0
     temp = []
     keyboard = []
