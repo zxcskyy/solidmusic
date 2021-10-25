@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from solidAPI import emoji
+from solidAPI import emoji, get_sudos
 from solidAPI.chat import add_chat, set_lang
 from solidAPI.other import get_message
 
@@ -24,7 +24,7 @@ def play_back_keyboard(user_id: int):
         j += 1
 
 
-def res_music(k, music, bot_username):
+def res_music(k: int, music: list, bot_username: str):
     results = "\n"
     for i in music:
         k += 1
@@ -36,7 +36,15 @@ def res_music(k, music, bot_username):
 
 
 async def edit_inline_text(
-    inline_board, temp, keyboard, cb, user_id, stats, k, music, bot_username
+    inline_board: list[InlineKeyboardButton],
+    temp: list,
+    keyboard: list,
+    cb: CallbackQuery,
+    user_id: int,
+    stats: str,
+    k: int,
+    music: list,
+    bot_username: str,
 ):
     results = res_music(k, music, bot_username)
     for count, j in enumerate(inline_board, start=1):
@@ -68,6 +76,15 @@ async def edit_inline_text(
     )
 
 
+async def play_music(cb, music, index, chat_id):
+    title: str = music[index]["title"]
+    uri: str = music[index]["url"]
+    duration = music[index]["duration"]
+    result = {"title": title, "uri": uri, "duration": duration}
+    music_result[chat_id].clear()
+    await player.play(cb, result)
+
+
 @Client.on_callback_query(filters.regex(pattern=r"close"))
 async def close_button(_, cb: CallbackQuery):
     callback = cb.data.split("|")
@@ -79,7 +96,7 @@ async def close_button(_, cb: CallbackQuery):
     if from_user_id != user_id:
         return await cb.answer("this is not for you.", show_alert=True)
     music_result[chat_id].clear()
-    if person.status in ["creator", "administrator"]:
+    if person.status in ["creator", "administrator", get_sudos(chat_id)]:
         return await message.delete()
     return await message.delete()
 
@@ -113,19 +130,10 @@ async def play_music(_, cb: CallbackQuery):
         return await cb.answer("this is not for u", show_alert=True)
     if not match:
         music = music_result[chat_id][0]
-        title: str = music[index]["title"]
-        uri: str = music[index]["url"]
-        result = {"title": title, "uri": uri}
-
-        music_result[chat_id].clear()
-        await player.play(cb, result)
+        await play_music(cb, music, index, chat_id)
     if match:
         music = music_result[chat_id][1]
-        title: str = music[index]["title"]
-        uri: str = music[index]["url"]
-        result = {"title": title, "uri": uri}
-        music_result[chat_id].clear()
-        await player.play(cb, result)
+        await play_music(cb, music, index, chat_id)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"next"))

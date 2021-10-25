@@ -21,7 +21,9 @@ async def change_lang(_, message: Message):
         temp = []
         keyboard = []
         for count, j in enumerate(kode, start=1):
-            temp.append(InlineKeyboardButton(f"{lang_flags[j]}", callback_data=f"set_lang_{j}"))
+            temp.append(
+                InlineKeyboardButton(f"{lang_flags[j]}", callback_data=f"set_lang_{j}")
+            )
             if count % 2 == 0:
                 keyboard.append(temp)
                 temp = []
@@ -29,7 +31,7 @@ async def change_lang(_, message: Message):
                 keyboard.append(temp)
         await message.reply(
             f"this is all language that supported with this bot",
-            reply_markup=InlineKeyboardMarkup(keyboard)
+            reply_markup=InlineKeyboardMarkup(keyboard),
         )
     if len(lang) == 2:
         if lang in kode:

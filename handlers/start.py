@@ -12,11 +12,6 @@ async def start_(client: Client, message: types.Message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     if message.chat.type == "supergroup":
-        if not get_chat(chat_id):
-            await message.reply(
-                f"{emoji.CROSS_MARK} this chats are not allowed, talk to owner to approve this chat"
-            )
-            return await client.leave_chat(chat_id)
         return await message.reply(
             f"{emoji.SPARKLES} hi {message.from_user.mention}!\n"
             f"i'm solidmusic bot, make me as an admin, so i can play musics in this chat's"
