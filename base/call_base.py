@@ -10,7 +10,7 @@ from utils.functions import get_audio_link
 from .client_base import call_py, user
 
 
-class CallBase(object):
+class CallBase:
     def __init__(self):
         self.user = user
         self.call = call_py
@@ -85,7 +85,8 @@ class CallBase(object):
         except GroupCallNotFound:
             return "not streaming"
 
-    async def send_playlist(self, chat_id):
+    def send_playlist(self, chat_id: int):
         playlist = self.playlist
-        call = self.call
         current = playlist[chat_id][0]
+        queued = playlist[chat_id][1:]
+        return current, queued

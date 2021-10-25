@@ -119,7 +119,7 @@ async def change_language_(_, cb: CallbackQuery):
 
 
 @Client.on_callback_query(filters.regex(pattern=r"(.*)play"))
-async def play_music(_, cb: CallbackQuery):
+async def play_music_(_, cb: CallbackQuery):
     match = cb.matches[0].group(1)
     data = cb.data.split("|")
     user_id = int(data[1])

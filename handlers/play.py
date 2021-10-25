@@ -1,8 +1,10 @@
 from pyrogram import Client, filters, types
+from pytgcalls.exceptions import GroupCallNotFound
 from solidAPI import emoji
 
 from utils.functions import group_only
 from utils.pyro_utils import music_result, yt_search
+from base.player import player
 
 button_keyboard = types.InlineKeyboardButton
 
@@ -68,3 +70,17 @@ async def play_(client: Client, message: types.Message):
         ),
         disable_web_page_preview=True,
     )
+
+
+@Client.on_message(filters.command("playlist") & group_only)
+async def playlist_(_, message: types.Message):
+    chat_id = message.chat.id
+    reply = message.reply
+    current, queued = player.send_playlist(chat_id)
+    if current and not queued:
+        return await reply(f"now playing {current}")
+    try:
+        if player.call.get_call(chat_id):
+            return await reply(f"now playing {current}\n\nin queue\n{queued}")
+    except GroupCallNotFound:
+        return await reply("not playing")

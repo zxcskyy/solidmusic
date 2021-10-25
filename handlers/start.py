@@ -1,5 +1,5 @@
 from pyrogram import Client, filters, types
-from solidAPI import get_chat, emoji
+from solidAPI import emoji
 
 from utils.functions import get_yt_details, download_yt_thumbnails
 
@@ -8,8 +8,7 @@ button_keyboard = types.InlineKeyboardButton
 
 
 @Client.on_message(filters.command("start"))
-async def start_(client: Client, message: types.Message):
-    chat_id = message.chat.id
+async def start_(_, message: types.Message):
     user_id = message.from_user.id
     if message.chat.type == "supergroup":
         return await message.reply(

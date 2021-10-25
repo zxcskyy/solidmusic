@@ -1,10 +1,11 @@
+from pyrogram import filters, Client
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+
 from solidAPI import set_lang
+from solidAPI.other import kode, lang_flags, get_message
 
 from utils.decorators import authorized_only
 from utils.functions import group_only
-from solidAPI.other import kode, lang_flags, get_message
-from pyrogram import filters, Client
 
 
 @Client.on_message(filters.command("lang") & group_only)
