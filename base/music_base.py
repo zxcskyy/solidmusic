@@ -62,8 +62,6 @@ class MusicBase(CallBase):
                     f"duration: {duration}\n"
                     f"requested by: {user.mention}"
                 )
-            except Exception as e:
-                await y.edit(f"an error occured\n\n{e}")
         elif len(playlist[chat_id]) >= 1:
             playlist[chat_id].extend([{"title": title, "uri": uri, "user_id": user_id}])
             y = await cb.edit_message_text("queued")

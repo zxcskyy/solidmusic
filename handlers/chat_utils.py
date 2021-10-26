@@ -22,15 +22,12 @@ async def on_bot_added(client: Client, msg: ChatMemberUpdated):
 
 @Client.on_message(filters=filters.left_chat_member)
 async def on_bot_kicked(client: Client, msg: Message):
-    try:
-        bot_id = (await client.get_me()).id
-        chat_id = msg.chat.id
-        members = msg.left_chat_member
-        if members.id == bot_id:
-            del_chat(chat_id)
-            await user.send_message(chat_id, "bot left from chat, assistant left this chat too.")
-            await asyncio.sleep(3)
-            await user.leave_chat(chat_id)
-            return
-    except Exception as e:
-        await msg.reply(f"{e}")
+    bot_id = (await client.get_me()).id
+    chat_id = msg.chat.id
+    members = msg.left_chat_member
+    if members.id == bot_id:
+        del_chat(chat_id)
+        await user.send_message(chat_id, "bot left from chat, assistant left this chat too.")
+        await asyncio.sleep(3)
+        await user.leave_chat(chat_id)
+        return
