@@ -1,7 +1,14 @@
+from konfig import config
 from pyrogram import Client
 from pytgcalls import PyTgCalls
 
-from konfig import config
+bot = Client(
+    ":memory:",
+    config.API_ID,
+    config.API_HASH,
+    bot_token=config.BOT_TOKEN,
+    plugins={"root": "handlers"},
+)
 
 user = Client(
     config.SESSION,
@@ -10,11 +17,3 @@ user = Client(
 )
 
 call_py = PyTgCalls(user)
-
-bot = Client(
-    ":memory:",
-    config.API_ID,
-    config.API_HASH,
-    bot_token=config.BOT_TOKEN,
-    plugins=dict(root="handlers"),
-)

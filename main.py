@@ -1,13 +1,18 @@
-from base.client_base import bot
-from base.player import player
-from pyrogram import idle
-from os import path, mkdir
+import asyncio
 
-if not path.exists("search"):
-    mkdir("search")
+from base.client_base import bot, call_py
+from pytgcalls import idle
 
 
-player.call.start()
-bot.start()
-print("[ Bot running ]")
-idle()
+async def mulai_bot():
+    print("[INFO]: STARTING BOT CLIENT")
+    await bot.start()
+    print("[INFO]: STARTING PYTGCALLS CLIENT")
+    await call_py.start()
+    await idle()
+    print("[INFO]: STOPPING BOT")
+    await bot.stop()
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(mulai_bot())
