@@ -1,5 +1,4 @@
 from pyrogram import Client, filters, types
-from pytgcalls.exceptions import GroupCallNotFound
 from solidAPI import emoji
 
 from utils.functions import group_only
@@ -19,7 +18,7 @@ def play_keyboard(user_id: int):
 
 @Client.on_message(filters.command("play") & group_only)
 async def play_(client: Client, message: types.Message):
-    proc = await message.reply(f"{emoji.MAGNIFYING_GLASS_TILTED_LEFT} searching...")
+    proc = await message.reply(f"{emoji.MAGNIFYING_GLASS_TILTED_LEFT} `searching...`")
     bot_username = (await client.get_me()).username
     query = " ".join(message.command[1:])
     user_id = message.from_user.id
@@ -73,14 +72,40 @@ async def play_(client: Client, message: types.Message):
 
 
 @Client.on_message(filters.command("playlist") & group_only)
-async def playlist_(_, message: types.Message):
+async def playlist_(client: Client, message: types.Message):
     chat_id = message.chat.id
+    bot_username = (await client.get_me()).username
     reply = message.reply
-    current, queued = player.send_playlist(chat_id)
-    if current and not queued:
-        return await reply(f"now playing {current}")
     try:
-        if player.call.get_call(chat_id):
-            return await reply(f"now playing {current}\n\nin queue\n{queued}")
-    except GroupCallNotFound:
+        current, queued = player.send_playlist(chat_id)
+        current_user_id = current["user_id"]
+        mention_current_user = (await message.chat.get_member(current_user_id)).user.mention
+        if current and not queued:
+            return await reply(
+                f"now playing\n"
+                f"📌 title: [{current['title']}](https://t.me/{bot_username}?start=ytinfo_{current['yt_id']})\n"
+                f"⏱ duration: {current['duration']}\n"
+                f"🙌 requested by: {mention_current_user}"
+            )
+        if current and queued:
+            ques = "\n"
+            for i in queued:
+                title = i["title"]
+                duration = i["duration"]
+                req_by = i["user_id"]
+                yt_id = i["yt_id"]
+                mention_user = (await message.chat.get_member(req_by)).user.mention
+                ques += f"📌 title: [{title}](https://t.me/{bot_username}?start=ytinfo_{yt_id})\n"
+                ques += f"⏱ duration: {duration}\n"
+                ques += f"🙌 requested by: {mention_user}\n\n"
+            return await reply(
+                f"now playing\n"
+                f"📌 title: [{current['title']}](https://t.me/{bot_username}?start=ytinfo_{current['yt_id']})\n"
+                f"⏱ duration: {current['duration']}\n"
+                f"🙌 requested by: {mention_current_user}\n\n\n"
+                f"💬 in queue\n{ques}",
+                disable_web_page_preview=True
+            )
+        return
+    except KeyError:
         return await reply("not playing")

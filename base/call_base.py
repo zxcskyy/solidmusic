@@ -7,11 +7,12 @@ from pytgcalls.types.input_stream import AudioPiped
 
 from utils.functions import get_audio_link
 
-from .client_base import call_py, user
+from .client_base import call_py, user, bot
 
 
 class CallBase:
     def __init__(self):
+        self.bot = bot
         self.user = user
         self.call = call_py
         self.playlist: dict[int, list[dict[str, str]]] = {}

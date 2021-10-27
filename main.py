@@ -1,7 +1,13 @@
 import asyncio
+import shutil
+import os
 
 from base.client_base import bot, call_py
 from pytgcalls import idle
+
+
+if not os.path.exists("search"):
+    os.mkdir("search")
 
 
 async def mulai_bot():
@@ -9,9 +15,12 @@ async def mulai_bot():
     await bot.start()
     print("[INFO]: STARTING PYTGCALLS CLIENT")
     await call_py.start()
+    print("[INFO]: BOT RUNNING")
     await idle()
     print("[INFO]: STOPPING BOT")
     await bot.stop()
+    if os.path.isdir("search"):
+        shutil.rmtree("search")
 
 
 loop = asyncio.get_event_loop()

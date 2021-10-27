@@ -76,11 +76,12 @@ async def edit_inline_text(
     )
 
 
-async def play_music(cb, music, index, chat_id):
+async def play_music(cb, music, index, chat_id, user_id):
     title: str = music[index]["title"]
     uri: str = music[index]["url"]
     duration = music[index]["duration"]
-    result = {"title": title, "uri": uri, "duration": duration}
+    yt_id = music[index]["id"]
+    result = {"title": title, "uri": uri, "duration": duration, "user_id": user_id, "yt_id": yt_id}
     music_result[chat_id].clear()
     await player.play(cb, result)
 
@@ -138,10 +139,10 @@ async def play_music_(_, cb: CallbackQuery):
         return await cb.answer("this is not for u", show_alert=True)
     if not match:
         music = music_result[chat_id][0]
-        await play_music(cb, music, index, chat_id)
+        await play_music(cb, music, index, chat_id, user_id)
     if match:
         music = music_result[chat_id][1]
-        await play_music(cb, music, index, chat_id)
+        await play_music(cb, music, index, chat_id, user_id)
 
 
 @Client.on_callback_query(filters.regex(pattern=r"next"))
@@ -150,7 +151,6 @@ async def next_music_(client: Client, cb: CallbackQuery):
     from_id = cb.from_user.id
     if from_id != user_id:
         return await cb.answer("you not allowed", show_alert=True)
-
     k = 5
     temp = []
     keyboard = []
