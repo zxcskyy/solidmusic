@@ -76,10 +76,10 @@ async def del_sudo_(_, message: types.Message):
     replied = message.reply_to_message
     chat_id = message.chat.id
     if not replied:
-        if type(sudo_id) == int:
+        if isinstance(sudo_id, int):
             res = await update_sudo(message, chat_id, sudo_id, "delete")
             return await message.reply(res)
-        if type(sudo_id) == str and len(sudo_id) >= 1:
+        if isinstance(sudo_id, str) and len(sudo_id) >= 1:
             user_id = (await message.chat.get_member(sudo_id)).user.id
             res = await update_sudo(message, chat_id, user_id, "delete")
             return await message.reply(res)
