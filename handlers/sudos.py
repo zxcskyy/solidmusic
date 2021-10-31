@@ -49,41 +49,45 @@ async def update_sudo(message: types.Message, chat_id: int, sudo_id: int, status
         return
 
 
-@Client.on_message(filters.command("addsudo") & group_only)
-@authorized_only
-async def add_sudos_(_, message: types.Message):
+async def process_sudo_update(message: types.Message, status: str):
     sudo_id = check_sudo_id(message)
     replied = message.reply_to_message
     chat_id = message.chat.id
-    if not replied:
-        if isinstance(sudo_id, int):
-            res = await update_sudo(message, chat_id, sudo_id, "add")
-            return await message.reply(res)
-        if isinstance(sudo_id, str) and len(sudo_id) >= 1:
-            user_id = (await message.chat.get_member(sudo_id)).user.id
+    if status == "add":
+        if not replied:
+            if isinstance(sudo_id, int):
+                res = await update_sudo(message, chat_id, sudo_id, "add")
+                return await message.reply(res)
+            if isinstance(sudo_id, str) and len(sudo_id) >= 1:
+                user_id = (await message.chat.get_member(sudo_id)).user.id
+                res = await update_sudo(message, chat_id, user_id, "add")
+                return await message.reply(res)
+        elif replied:
+            user_id = replied.from_user.id
             res = await update_sudo(message, chat_id, user_id, "add")
             return await message.reply(res)
-    elif replied:
-        user_id = replied.from_user.id
-        res = await update_sudo(message, chat_id, user_id, "add")
-        return await message.reply(res)
+    elif status == "delete":
+        if not replied:
+            if isinstance(sudo_id, int):
+                res = await update_sudo(message, chat_id, sudo_id, "delete")
+                return await message.reply(res)
+            if isinstance(sudo_id, str) and len(sudo_id) >= 1:
+                user_id = (await message.chat.get_member(sudo_id)).user.id
+                res = await update_sudo(message, chat_id, user_id, "delete")
+                return await message.reply(res)
+        elif replied:
+            user_id = replied.from_user.id
+            res = await update_sudo(message, chat_id, user_id, "delete")
+            return await message.reply(res)
+
+
+@Client.on_message(filters.command("addsudo") & group_only)
+@authorized_only
+async def add_sudos_(_, message: types.Message):
+    await process_sudo_update(message, "add")
 
 
 @Client.on_message(filters.command("delsudo") & group_only)
 @authorized_only
 async def del_sudo_(_, message: types.Message):
-    sudo_id = check_sudo_id(message)
-    replied = message.reply_to_message
-    chat_id = message.chat.id
-    if not replied:
-        if isinstance(sudo_id, int):
-            res = await update_sudo(message, chat_id, sudo_id, "delete")
-            return await message.reply(res)
-        if isinstance(sudo_id, str) and len(sudo_id) >= 1:
-            user_id = (await message.chat.get_member(sudo_id)).user.id
-            res = await update_sudo(message, chat_id, user_id, "delete")
-            return await message.reply(res)
-    elif replied:
-        user_id = replied.from_user.id
-        res = await update_sudo(message, chat_id, user_id, "delete")
-        return await message.reply(res)
+    await process_sudo_update(message, "delete")
