@@ -18,11 +18,14 @@ def play_keyboard(user_id: int):
 
 @Client.on_message(filters.command("play") & group_only)
 async def play_(client: Client, message: types.Message):
-    proc = await message.reply(f"{emoji.MAGNIFYING_GLASS_TILTED_LEFT} `searching...`")
     bot_username = (await client.get_me()).username
     query = " ".join(message.command[1:])
     user_id = message.from_user.id
-    yts = yt_search(query)
+    try:
+        yts = yt_search(query)
+    except IndexError:
+        return await message.reply("give me some title")
+    proc = await message.reply(f"{emoji.MAGNIFYING_GLASS_TILTED_LEFT} `searching...`")
     cache = []
     chat_id = message.chat.id
     music_result[chat_id] = []

@@ -2,8 +2,8 @@ import asyncio
 import shutil
 import os
 
-from base.client_base import bot, call_py
 from pytgcalls import idle
+from base.client_base import bot, call_py
 
 
 if not os.path.exists("search"):

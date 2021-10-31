@@ -23,8 +23,8 @@ class MusicBase(CallBase):
         yt_url,
         yt_id,
     ):
-        playlist = self.playlist
-        call = self.call
+        playlist = self._playlist
+        call = self._call
         playlist[chat_id] = [
             {
                 "title": title,
@@ -50,7 +50,7 @@ class MusicBase(CallBase):
             await self._play(chat_id, title, uri, user_id, duration, yt_url, yt_id)
 
     async def play(self, cb: types.CallbackQuery, result):
-        playlist = self.playlist
+        playlist = self._playlist
         chat_id = cb.message.chat.id
         title = result["title"]
         duration = result["duration"]
@@ -59,7 +59,7 @@ class MusicBase(CallBase):
         yt_id = result["yt_id"]
         user = (await cb.message.chat.get_member(user_id)).user
         lang = user.language_code
-        bot_username = (await self.bot.get_me()).username
+        bot_username = (await self._bot.get_me()).username
         if not playlist:
             try:
                 y = await cb.edit_message_text(get_message(chat_id, "process"))
