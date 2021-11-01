@@ -44,7 +44,7 @@ async def play_(client: Client, message: types.Message):
         results += f"{k}. [{i['title'][:35]}...]({i['url']})\n"
         results += f"┣ {emoji.LIGHT_BULB} duration - {i['duration']}\n"
         results += f"┣ {emoji.FIRE} [More Information](https://t.me/{bot_username}?start=ytinfo_{i['id']})\n"
-        results += "┗ powered by solid project\n\n"
+        results += "┗ POWERED By @zxcskyy\n\n"
 
     temps = []
     keyboards = []
@@ -87,8 +87,8 @@ async def playlist_(client: Client, message: types.Message):
             return await reply(
                 f"now playing\n"
                 f"📌 title: [{current['title']}](https://t.me/{bot_username}?start=ytinfo_{current['yt_id']})\n"
-                f"⏱ duration: {current['duration']}\n"
-                f"🙌 requested by: {mention_current_user}"
+                f"🕛 duration: {current['duration']}\n"
+                f"🤴 requested by: {mention_current_user}"
             )
         if current and queued:
             ques = "\n"
@@ -99,13 +99,13 @@ async def playlist_(client: Client, message: types.Message):
                 yt_id = i["yt_id"]
                 mention_user = (await message.chat.get_member(req_by)).user.mention
                 ques += f"📌 title: [{title}](https://t.me/{bot_username}?start=ytinfo_{yt_id})\n"
-                ques += f"⏱ duration: {duration}\n"
-                ques += f"🙌 requested by: {mention_user}\n\n"
+                ques += f"🕛 duration: {duration}\n"
+                ques += f"🤴 requested by: {mention_user}\n\n"
             return await reply(
                 f"now playing\n"
                 f"📌 title: [{current['title']}](https://t.me/{bot_username}?start=ytinfo_{current['yt_id']})\n"
-                f"⏱ duration: {current['duration']}\n"
-                f"🙌 requested by: {mention_current_user}\n\n\n"
+                f"🕛 duration: {current['duration']}\n"
+                f"🤴 requested by: {mention_current_user}\n\n\n"
                 f"💬 in queue\n{ques}",
                 disable_web_page_preview=True
             )
