@@ -15,19 +15,19 @@ async def start_(_, message: types.Message):
     if message.chat.type == "supergroup":
         return await message.reply(
             f"{emoji.SPARKLES} hi {message.from_user.mention}!\n"
-            f"i'm solidmusic bot, make me as an admin, so i can play musics in this chat's"
+            f"i'm Music Bot, make me as an admin, so i can play musics in this chat's"
         )
     if message.chat.type == "private":
         if len(message.command) == 1:
             await message.reply(
-                f"hi {message.from_user.mention}! i can play musics on your groups through"
+                f"Hi! {message.from_user.mention}! i can play musics on your groups through"
                 "telegram voice chats\n"
                 f"{emoji.LIGHT_BULB} find out all my command by clicking \"commands\" button",
                 reply_markup=markup_keyboard(
                     [
                         [
                             button_keyboard(
-                                f"{emoji.PLUS} add me to your chats",
+                                f"{emoji.PLUS} ADD TO YOUR GROUP {emoji.PLUS}",
                                 url=f"https://t.me/{bot_username}?startgroup=true")
                         ],
                         [
@@ -38,14 +38,8 @@ async def start_(_, message: types.Message):
                         ],
                         [
                             button_keyboard(
-                                f"{emoji.LOUDSPEAKER} channel",
-                                url="https://t.me/solidprojects"
-                            )
-                        ],
-                        [
-                            button_keyboard(
-                                f"{emoji.FIRE} maintainer",
-                                url="https://t.me/talktome_bbot"
+                                f"{emoji.FIRE} OWNER",
+                                url="https://t.me/zxcskyy"
                             )
                         ]
                     ]
